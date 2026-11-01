@@ -7,7 +7,7 @@ A reusable research repository template owned by AC. It provides working rules a
 1. Create a new independent repository by copying these files into a fresh Git repository. Alternatively, use GitHub's **Use this template** option if the repository has been configured to offer it. Start fresh Git history; do not fork an earlier campaign's history.
 2. Set the new repository's name, identity and owner. AC is the default owner and may be replaced consistently in the new repository's rules and records.
 3. Read [AGENTS.md](AGENTS.md), [agents/WORKFLOW.md](agents/WORKFLOW.md) and the applicable role file: [Codex](agents/codex/CODEX.md) or [Claude](agents/claude/CLAUDE_ROLES.md). Preserve their research, evidence, audit and branch rules when configuring the new campaign.
-4. Review the generic `RS-T` and `RS-N` ID namespaces before allocating any IDs. Keep them or choose campaign-specific namespaces consistently across the rules, registries and templates. Set the cold-storage path for the new campaign before using cold storage.
+4. Review the generic `RS-T` and `RS-N` ID namespaces before allocating any IDs. Keep them or choose campaign-specific namespaces consistently across the rules, registries and templates. Configure campaign-specific cold storage and a local working-track folder outside Git before using them; no folder from another campaign is inherited. Local topic results belong in `results/<topic-slug>.md` inside that chosen folder, with shared `RESULTS.md` updates governed by the workflow.
 5. Use the first topic to define the scientific question, scope, assumptions and success criteria, then update [state/CURRENT.md](state/CURRENT.md).
 
 Perform all scientific work in the new repository. Do not turn this reusable template into a scientific campaign; changes here should improve the reusable scaffold.
@@ -26,12 +26,16 @@ Perform all scientific work in the new repository. Do not turn this reusable tem
 | `literature/INDEX.md` | Extracted published statements by claim type |
 | `literature/records/` | Source records with hypotheses and page/theorem references |
 | `tracks/` | Scientific tracks, theory files and scoped negative results |
-| `topics/` | Topic logs, proposals, audits, responses and reproducible checks |
-| `templates/` | Reusable records for ideas, results, sources, topics and cold storage |
+| `topics/` | Topic logs, numbered handoffs, proposals, audits, responses and reproducible checks |
+| `templates/` | Reusable records for ideas, results, sources, topics, handoffs and cold storage |
 
-Registries, topics, scientific tracks and source records start empty. There are no inherited results, ideas, literature statements, scientific IDs or ID reservations. No numerical evidence, priority claim or subject-specific assumption is preloaded. Newly allocated IDs belong to the new repository; external statements require explicit citations.
+Scientific registries, topics, tracks and source records start empty. There are no inherited results, ideas, literature statements, scientific IDs or ID reservations. No numerical evidence, priority claim or subject-specific assumption is preloaded. Newly allocated IDs belong to the new repository; external statements require explicit citations. Any template-maintenance topics document scaffold changes only; omit or archive them when starting a new campaign.
+
+For an ongoing topic, put the complete next-step instruction in a new numbered file following [HANDOFF.md](templates/HANDOFF.md). The next prompt can then be `<Agent> (<model, effort>): Continue <branch>.`. Earlier instruction bodies are retained. Reserve fresh final-ID ranges against all recorded reservations, including open drafts and retired ranges; assign final IDs only at PR preparation.
 
 Before proposing an idea, read `state/IDEAS.md`. Before opening a paper or making attribution or novelty claims, read `literature/INDEX.md`. Follow the preserved workflow for topic branches, evidence, independent audits and owner merges.
+
+Recommend squash merge by default for ready PRs; AC may choose another merge method. Agents never merge PRs. Fable is available only when AC explicitly requests it for the particular conceptual ideas-campaign task.
 
 ## First research prompt
 
