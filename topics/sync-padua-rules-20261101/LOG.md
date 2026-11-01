@@ -31,6 +31,7 @@
 - Full pinned source comparison re-run after Fable steering. All remaining source differences match PORT.md's explicit generic adaptations and AC overrides; Codex roles and all six templates match source after namespace normalization, with HANDOFF/TOPIC_LOG byte-identical.
 - Actual Python assertions pass: all four Fable permission clauses require a task-specific AC request; squash is recommended by default with AC choice and no agent merges; rehearsal policy retained; no concrete Padua namespace/path leaks into operative rules/templates; only authorized scaffold/maintenance paths change, preserving every scientific registry/state file. `git diff --check` passes.
 - Independent Claude protocol audit is the next step. Prepare a draft PR with complete source provenance, both AC overrides and a numbered handoff pinned to the completed development commit. No range or allocation ledger is needed.
+- Development outputs committed at `0e612234d8a141e87ff98f8c4b2a7d6e2d765dac`. [Handoff 01](handoffs/01-audit.md) requests independent Claude review of that exact input and both AC overrides; publication adds only handoff/log metadata. No draft-readiness or audit-acceptance claim is made.
 
 ## Runs needed
 
