@@ -1,7 +1,7 @@
 # Sync merged Padua rules into the reusable template
 
 - Branch: `codex/sync-padua-rules-20261101` · Base: `d89af8343ebed16dd0b32f30ad2a58d06eac5bb0` · Developer: Codex · Auditor: Claude
-- Stage: PR · Next: `Codex (gpt-6-astra, medium): Continue codex/sync-padua-rules-20261101.` · Open handoff: [handoffs/02-prepare.md](handoffs/02-prepare.md)
+- Stage: PR · Assigned agent work complete; next: AC's merge decision · Open handoff: none
 - Reserved final-ID ranges: no range; scaffold rule maintenance only.
 - Scientific claims: none; all scientific registries stay empty and unchanged.
 - Open for AC: merge decision (audit-01 ACCEPTED; squash recommended by default); no storage destination or scientific configuration is selected by this port.
@@ -52,3 +52,4 @@ No scientific runs. Final publication and closure follow the checks below; only 
 - Re-executed checks: all 12 changed paths at the audit head are accepted scaffold/maintenance paths; scientific state/registries/literature/tracks and .github match main exactly; all seven accepted scaffold files plus PORT.md match the audited candidate byte for byte; actual relative links resolve; all four operative Fable clauses require an explicit task-specific AC request; squash is recommended by default with AC choice and no agent merges; exactly one open preparation handoff; clean tree; `git diff --check origin/main HEAD` passes.
 - Destination's only open PR is #1; no IDs are reserved or assigned, no allocation ledger is needed, and scientific registries remain empty. This is single-PR scaffold work, so the batch-only sequential rehearsal obligation does not apply. No scientific execution or local-track write is claimed.
 - Final delivery changes only this LOG and handoff 02's status after the real output commit exists. Accepted rules/templates/README/PORT and the audit report remain unchanged, so no material-change re-audit is needed. Push the checked head, refresh PR #1's WORK/AUDIT/PR body and mark it ready for review. Recommend squash merge by default; AC chooses the method and alone merges.
+- Preparation output commit: `14ec5e294157326833b4d4267dde54ae686a24d7`. Handoff 02 closes against that real existing commit in this subsequent publication commit. No successor is needed: all assigned agent work is complete and only AC's merge decision remains. The final publication head is recorded in PR #1; it differs from the accepted audit head only in preparation LOG entries and this handoff status.
