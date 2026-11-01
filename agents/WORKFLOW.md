@@ -13,12 +13,32 @@ The orchestrator owns scope, task allocation, integration, Git, and the PR. Deve
 | Protocol and ordinary technical audit | `gpt-6-astra`, medium | Auditor chooses Sonnet 5.5 high or Opus 5.5 high |
 | Mathematical audit | `gpt-6-astra`, high | Opus 5.5, high or xhigh |
 | Adversarial audit, novel mechanism, or a stalled proof | `gpt-6-astra`, xhigh; ultra only with written justification | Opus 5.5, xhigh |
+| Ideas campaigns: conceptual generation, gating and adversarial idea checks | unchanged (rows above apply) | Fable 5.1, xhigh only when AC explicitly requests Fable for the particular task; Opus 5.5 xhigh remains allowed |
+
+Fable 5.1 at xhigh effort may be used only when AC explicitly requests Fable for the particular task, and only within conceptual ideas campaigns: brief writing, candidate generation, duplicate gating and adversarial idea checks. It does not change the developer/auditor separation, the evidence rules, the status words or the Codex column. Where an ideas campaign runs a tiny sanity script, Sonnet 5.5 high remains the development model for it. Record the actual model and effort in every commit trailer and log entry.
 
 Use agentic orchestration: delegate bounded development, independent checks, or audits when useful. Give each subagent its inputs, expected artifacts, model, scope, and acceptance criteria. Only the orchestrator changes Git state. Batch independent file reads and searches. Do not request unavailable models silently: report the limitation and any proposed substitute to AC before work whose required model is unavailable.
 
 ## Work cycle
 
-One topic is one branch (`codex/<slug>` or `claude/<slug>`) and one PR, with a log at `topics/<slug>/LOG.md`. `New topic: <objective>.` starts WORK; `Continue <branch>.` follows the log's next step. A small job explicitly requested with `no audit` may omit the audit and log, while retaining branch and PR rules. This exemption must not add or upgrade any `RS-T`, `RS-N`, `IDEA`, or `LIT` entry, or change rules, templates or registry schemas; such work follows the ordinary audit cycle.
+One topic is one branch (`codex/<slug>` or `claude/<slug>`) and one PR, with a log at `topics/<slug>/LOG.md`. `New topic: <objective>.` starts WORK; `Continue <branch>.` means: read the rules, the log (if the topic has one) and the open handoff in `topics/<slug>/handoffs/` at the branch head, and carry out that handoff. A small job explicitly requested with `no audit` may omit the audit and log, while retaining branch and PR rules. It does not waive a numbered handoff when further agent work remains; without a log, the necessary context and the handoff chain live in the handoff files. This exemption must not add or upgrade any `RS-T`, `RS-N`, `IDEA`, or `LIT` entry, or change rules, templates or registry schemas; such work follows the ordinary audit cycle.
+
+**Handoff files.** Each topic keeps numbered handoffs in `topics/<slug>/handoffs/NN-<step>.md` (`01-audit.md`, `02-response.md`, …), following `templates/HANDOFF.md`. The orchestrator of the session that ends a step opens a **new** handoff with the next number. That orchestrator is the developer's, the auditor's or the topic orchestrator, whoever holds the open handoff. The handoff contains the complete instruction for the next step:
+- the next agent, model and effort;
+- the branch and the input head SHA, i.e. the existing commit being handed off, as distinct from the later commit that publishes the handoff;
+- the stage, scope and inputs to read;
+- what to do and what not to reopen;
+- the acceptance criteria and expected outputs.
+
+Never overwrite or delete an earlier handoff, and never alter its instruction body; only its status line changes.
+- **Numbering.** Only the orchestrator holding the open handoff allocates the next number and changes statuses. Parallel workers and subagents return their results to that orchestrator and never open handoffs of their own. Two independent orchestrators never work one branch at the same time.
+- **Open while in progress.** A handoff stays `open` while its step is being worked.
+- **Completion.** Commit the step's outputs first. Then, in a following commit, change only the old handoff's status to `done in <output-commit-sha>` and add the next numbered handoff, in the same commit.
+- **Redirection.** If AC's message adds to or changes the instruction, AC's message takes precedence. Record the change in the log and in a new numbered handoff, and set the old status to `superseded by NN: <reason>`.
+- **Cancellation** uses `withdrawn: <reason>`.
+- **One open handoff.** At every published step boundary, a topic with remaining work has exactly one open handoff. This includes a topic waiting for PR preparation or a requested follow-up. Only AC merges.
+- **Closing a topic.** When all assigned work is complete or AC withdraws the topic, close its last handoff and record completion or withdrawal in the log, or in the final handoff's status line for a log-exempt job. The topic then has no open handoff and needs no continuation prompt.
+- **Before replying.** Commit and push the new handoff before replying to AC. The reply then ends only with the short `Continue <branch>.` prompt. The log links each handoff with one line.
 
 Record the stage in the topic log: WORK → AUDIT → PR. The developer sets AUDIT when development is complete; the other agent (Claude for Codex development, Codex for Claude development) writes `audit-NN.md`. An accepted audit sets PR; findings set WORK. The developer answers every finding in `response-NN.md`; material changes return to AUDIT, while an unchanged claim with a documented resolution may proceed to PR. Preserve disagreements for AC. Never edit the auditor's report to resolve it. An independent subagent check supplements this handoff. A draft PR may preserve work before the handoff is complete, with audit marked PENDING.
 
@@ -82,6 +102,8 @@ Independent reruns must actually execute separately from the developer's run and
 
 Generated outputs remain off-repository by default. AC chooses a campaign-specific cold-storage destination; until then use local working output and report archival work as pending. Use `templates/COLD_STORAGE.md` to manifest artifact path or locator, SHA-256, byte size, generating command, source commit/blob identifiers, checker command and checker output, plus retention and retrieval notes. A link without content identity is insufficient. Do not expose credentials in manifests.
 
+AC chooses a campaign-specific folder outside Git for the local working track; until it is configured, report local-track updates as pending. Each topic keeps its own file `results/<topic-slug>.md` there; only that topic's orchestrator writes it, appending or revising its own entries. The shared `RESULTS.md` is a merged view: a topic changes only its own section there, and only at PR preparation or after AC merges its PR, by appending or replacing that section from its own results file. Before any write to a shared local file, stage the current bytes, merge into them, and write with the modification-time guard; on a guard rejection, stage and merge again, never force. Never rewrite another topic's section or regenerate a shared file from an older copy. A lost section is restored from that topic's own results file. Local files carrying third-party text or private material stay out of Git.
+
 A committed generated file must be necessary and no larger than 1 MB; all committed generated outputs together must remain under 5 MB. If evidence exceeds these limits, store it in cold storage and commit its manifest, small checker, and checker output/result. Such a verified, retrievable artifact may supply the large evidence component; state any resulting verification limitation. Do not claim a computer proof is complete while required code, evidence records, or independent checks are absent. Do not split files to evade limits. These limits do not authorize deleting historical artifacts.
 
 ## Audit and PR records
@@ -94,8 +116,34 @@ Use three visible PR sections:
 
 Update `state/IDEAS.md`, shared state, global IDs, topic indexes, and allocation records at PR preparation after checking current `main` and active PRs. During exploration keep local records without repeatedly mutating shared registries. Do not let concurrent writers allocate the same ID or overwrite state. Material divergence from the audited SHA requires a recorded impact check and, where needed, a fresh audit.
 
-Use provisional IDs `<namespace>?<topic-slug>-<agent>-<local-number>` for all four namespaces: `RS-T?charter-codex-01`, `RS-N?charter-codex-01`, `IDEA?charter-codex-01`, and `LIT?charter-codex-01`. Final IDs are allocated only during PR preparation; retain every provisional-to-final mapping.
+Use provisional IDs `<namespace>?<topic-slug>-<agent>-<local-number>` for all four namespaces: `RS-T?charter-codex-01`, `RS-N?charter-codex-01`, `IDEA?charter-codex-01`, and `LIT?charter-codex-01`. Final IDs are assigned during PR preparation from the topic's reserved ranges (below). Retain every provisional-to-final mapping.
 
-When several PRs share registries or allocations, use a single ledger at `topics/<batch-slug>/ALLOCATIONS.md`, linked from `ID_CROSSWALK.md` and every member PR/log. The ledger records reserved IDs, owners, pinned bases/heads, dependencies and integration order. Before allocating, refresh main and active PRs, choose one allocation owner, and reconcile all reservations with that owner; parallel writers must not independently reserve IDs. Conflicting reservations are resolved and propagated before any affected PR becomes ready. With no batch, record reservations at `topics/<topic-slug>/ALLOCATIONS.md` and link them from `ID_CROSSWALK.md` as soon as allocations exist. No ledger is needed while no IDs are reserved.
+**Reserve fresh ranges; never reallocate.** Reserve the final-ID ranges a topic needs whenever it reaches an allocation stage: when its draft PR is opened, when it first needs final IDs, and whenever it needs more.
+1. Refresh `main` and every open PR, drafts included.
+2. Read the ledger copy on each of those branches, plus every final ID they already use in `PROOF_STATUS.md`, `state/IDEAS.md`, `literature/INDEX.md` and `ID_CROSSWALK.md`. Also read the retired reservations recorded in those ledgers (see below), and the ledger of any closed, unmerged PR whose reservation is not yet recorded as retired.
+3. Compute the maximum separately in each namespace. Start each new range above the highest ID that `main`, any open PR or any retired reservation uses or reserves. Never reuse, overlap or renumber an ID that another branch has reserved or allocated, even if that branch is unmerged or closed.
+4. Record the reservation at once in the ledger on the reserving branch and in its PR body: namespace, range, count, branch, date, and the heads checked. Size each range with headroom; unused IDs remain permanent gaps.
+5. If a topic needs more IDs later, it reserves a new range by the same procedure; it never shifts existing ranges.
+6. After a merge, other branches merge `main` and keep their own reservations.
+7. Recheck current reservations before assigning final IDs and before declaring readiness.
 
-Rehearse the intended sequential squash integration in a disposable local branch without touching `main`, record resulting conflicts and semantic checks, and repair the topic branches before requesting AC's merge sequence. This batch rehearsal is required only for relevant multi-PR work and never authorizes merging, force-pushing, or rewriting published history. AC integrates ready PRs by squash merge; agents never perform that merge.
+**Priority and collisions.** A reservation's priority is the pushed commit that records it, as linked from the PR. A date alone does not establish priority. On a genuine collision:
+- preserve accepted IDs and the earlier published reservation;
+- give the later, conflicting reservation a replacement by the fresh-range procedure;
+- record that reservation's old-to-new mapping in the ledger and the crosswalk.
+
+If priority is unclear, or if either repair would renumber an accepted ID, refer the conflict to AC before any further allocation.
+
+**Retired reservations.** Reservations remain in force after a PR closes, is abandoned or loses its branch. Before an agent closes or abandons a topic, or deletes the only live reference to its reservation, it preserves that reservation as a *retired reservation* in the continuing batch ledger: namespace, range, owner, first published commit and PR locator. Later integrations keep these records. An agent that finds a closed, unmerged PR with an unrecorded reservation records it in the same way. If a past reservation cannot be reconstructed, stop allocation in the affected namespace and ask AC; never infer that the range is free.
+
+**Transition (when adopting this procedure).** This procedure supersedes older ledger prose that requires a single allocation owner or that owner's confirmation.
+- Keep that prose as historical provenance, and add a dated supersession note the next time the ledger is maintained.
+- All existing recorded ranges and AC-specific instructions remain in force.
+- Each open topic adopts this procedure at its next continuation, before any new reservation, final-ID assignment or readiness decision.
+- Existing reservations are imported unchanged, with missing provenance (count, heads checked, commit) filled in. They are not reserved again, and no headroom is added retrospectively.
+- A topic that needs no final IDs records "no range".
+- Reservation-only ledger and PR-body updates are allowed when a draft is opened. They do not authorise earlier changes to scientific registries, or any final-ID assignment outside PR preparation.
+
+When several PRs share registries or allocations, use a single ledger at `topics/<batch-slug>/ALLOCATIONS.md`, linked from `ID_CROSSWALK.md` and every member PR/log. The ledger records reserved IDs, owners, pinned bases/heads, dependencies and integration order. Reserve ranges by the procedure above: each reserving branch is the owner of its own ranges, and the authority is the union of all branches' recorded reservations, including retired ones. Writers on different branches never share or split a range. A collision that occurs anyway is resolved before any affected PR becomes ready, under **Priority and collisions** above. With no batch, record reservations at `topics/<topic-slug>/ALLOCATIONS.md` and link them from `ID_CROSSWALK.md` as soon as allocations exist. No ledger is needed while no IDs are reserved.
+
+Rehearse the intended sequential squash integration in a disposable local branch without touching `main`, record resulting conflicts and semantic checks, and repair the topic branches before requesting AC's merge sequence. This batch rehearsal is required only for relevant multi-PR work and never authorizes merging, force-pushing, or rewriting published history. Recommend squash merge by default for ready PRs; AC may choose another merge method. Agents never merge PRs.
