@@ -42,4 +42,13 @@
 
 ## Runs needed
 
-No scientific runs. Audit accepted; next step is Codex PR preparation under handoff 02. Local working-track updates remain pending because no campaign folder is configured and this template has no scientific campaign.
+No scientific runs. Final publication and closure follow the checks below; only AC's merge decision remains after publication. Local working-track updates remain pending because no campaign folder is configured and this template has no scientific campaign; no local write is part of this scaffold update.
+
+## 2026-11-01 — Codex PR preparation
+
+- AC invoked handoff 02 with `Codex (gpt-6-astra, medium): Continue codex/sync-padua-rules-20261101.` No scope override. Requested model/effort: gpt-6-astra medium; resolved runtime metadata unexposed. Rules/log/handoff read at refreshed branch head `f698099ca77d7d3d026c52150c5bbcc9e29b4e71`; rules match the earlier development candidate.
+- Refreshed main and topic. Main is still `d89af8343ebed16dd0b32f30ad2a58d06eac5bb0`; no merge or rule/template change is needed. Claude audit outputs are `530a0ef25def10df1b78275640bd5c61e4a4e3d6`; published audit/handoff head is `f698099ca77d7d3d026c52150c5bbcc9e29b4e71`.
+- Read audit-01: ACCEPTED by Claude Opus 5.5 high for candidate `0e612234d8a141e87ff98f8c4b2a7d6e2d765dac`. No findings need a response. Preserve O1 (pre-existing article artefacts, out of scope) and O2 (consistent README Fable wording, no change requested); neither is fixed or reopened here.
+- Re-executed checks: all 12 changed paths at the audit head are accepted scaffold/maintenance paths; scientific state/registries/literature/tracks and .github match main exactly; all seven accepted scaffold files plus PORT.md match the audited candidate byte for byte; actual relative links resolve; all four operative Fable clauses require an explicit task-specific AC request; squash is recommended by default with AC choice and no agent merges; exactly one open preparation handoff; clean tree; `git diff --check origin/main HEAD` passes.
+- Destination's only open PR is #1; no IDs are reserved or assigned, no allocation ledger is needed, and scientific registries remain empty. This is single-PR scaffold work, so the batch-only sequential rehearsal obligation does not apply. No scientific execution or local-track write is claimed.
+- Final delivery changes only this LOG and handoff 02's status after the real output commit exists. Accepted rules/templates/README/PORT and the audit report remain unchanged, so no material-change re-audit is needed. Push the checked head, refresh PR #1's WORK/AUDIT/PR body and mark it ready for review. Recommend squash merge by default; AC chooses the method and alone merges.
