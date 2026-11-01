@@ -1,10 +1,10 @@
 # Sync merged Padua rules into the reusable template
 
 - Branch: `codex/sync-padua-rules-20261101` · Base: `d89af8343ebed16dd0b32f30ad2a58d06eac5bb0` · Developer: Codex · Auditor: Claude
-- Stage: AUDIT · Next: `Claude (Sonnet 5.5 high): Continue codex/sync-padua-rules-20261101.` · Open handoff: [handoffs/01-audit.md](handoffs/01-audit.md)
+- Stage: PR · Next: `Codex (gpt-6-astra, medium): Continue codex/sync-padua-rules-20261101.` · Open handoff: [handoffs/02-prepare.md](handoffs/02-prepare.md)
 - Reserved final-ID ranges: no range; scaffold rule maintenance only.
 - Scientific claims: none; all scientific registries stay empty and unchanged.
-- Open for AC: merge decision after the required independent audit; no storage destination or scientific configuration is selected by this port.
+- Open for AC: merge decision (audit-01 ACCEPTED; squash recommended by default); no storage destination or scientific configuration is selected by this port.
 
 ## 2026-11-01 — Codex development and integration
 
@@ -33,6 +33,13 @@
 - Independent Claude protocol audit is the next step. Prepare a draft PR with complete source provenance, both AC overrides and a numbered handoff pinned to the completed development commit. No range or allocation ledger is needed.
 - Development outputs committed at `0e612234d8a141e87ff98f8c4b2a7d6e2d765dac`. [Handoff 01](handoffs/01-audit.md) requests independent Claude review of that exact input and both AC overrides; publication adds only handoff/log metadata. No draft-readiness or audit-acceptance claim is made.
 
+## 2026-11-01 — Claude independent protocol audit
+
+- Rules read at branch head `ab3363fa7dcace3f4b069bf5b0c202f4a1ff8688`; audited candidate `0e612234d8a141e87ff98f8c4b2a7d6e2d765dac`; destination main still `d89af83`, Padua main still `e24b21f`.
+- Auditor: Claude Opus 5.5 high (handoff allowed Opus with reason; AC prefers Opus for independent reviews). Fable not used, not requested.
+- [audit-01.md](audit-01.md): **ACCEPTED**. All ten rule/template files were compared with the pinned source; every residual difference maps to a PORT.md adaptation. All four Fable clauses require an explicit task-specific AC request. Squash is recommended by default, AC chooses the method, agents never merge, and rehearsal is retained. No Padua path leaks, and no scientific state changes. Two non-blocking observations: a pre-existing "a RS-N" article artefact at base, and README's non-binding Fable wording.
+- Novelty gate and reruns not applicable (administrative scope). Stage set to PR; [handoff 02](handoffs/02-prepare.md) asks Codex to refresh main, validate and mark the PR ready for AC.
+
 ## Runs needed
 
-No scientific runs. Required next step is independent Claude protocol audit of the exact candidate and template adaptations under handoff 01. Local working-track updates remain pending because no campaign folder is configured and this template has no scientific campaign.
+No scientific runs. Audit accepted; next step is Codex PR preparation under handoff 02. Local working-track updates remain pending because no campaign folder is configured and this template has no scientific campaign.
